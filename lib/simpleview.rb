@@ -2,6 +2,7 @@ class Simpleview
   attr_accessor :base_file_path
 
   def parse(hash, template, offset=0)
+    result = ""
     base = hash
     scope = base
     previous_scope = base
@@ -35,7 +36,8 @@ class Simpleview
       elsif value[0] == "/"
         return
       end
-      puts line.sub(full_value, scope[value])
+      result += line.sub(full_value, scope[value]) + "\n"
     end
+    result
   end
 end
