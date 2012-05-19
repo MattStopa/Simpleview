@@ -20,7 +20,7 @@ class Simpleview
       start = line =~ /{/
       stop  = line[start..line.length] =~ /}/ if start != nil
       if start == nil || stop == nil
-        puts line
+        result += "#{line}\n"
         next
       end
       full_value = line[start..stop+start]
@@ -29,12 +29,13 @@ class Simpleview
         previous_scope = scope
         miniscope = scope[value[1..full_value.length]]
         miniscope.each do |s|
-          parse(s, template, index+1)
+          r = parse(s, template, index+1)
+          result += r if r.class == String
         end
         waiting = true
         next
       elsif value[0] == "/"
-        return
+        return result
       end
       result += line.sub(full_value, scope[value]) + "\n"
     end

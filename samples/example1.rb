@@ -27,5 +27,5 @@ sample_hash =
 }
 
 s = Simpleview.new
-s.parse(sample_hash, sample_template)
+puts s.parse(sample_hash, sample_template)
 
