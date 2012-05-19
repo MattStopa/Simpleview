@@ -8,32 +8,32 @@ class Simpleview
     waiting = false
     template.split("\n").each_with_index do |line, index|
       if waiting
-	if (line =~ /{#/).nil?
-	  next
-	else
-	  waiting = false
-	  next
-	end
+        if (line =~ /{#/).nil?
+          next
+        else
+          waiting = false
+          next
+        end
       end
       next if index < offset
       start = line =~ /{/
       stop  = line[start..line.length] =~ /}/ if start != nil
       if start == nil || stop == nil
-	puts line
-	next
+        puts line
+        next
       end
       full_value = line[start..stop+start]
       value = full_value[1..full_value.length-2]
       if value[0] == "#"
         previous_scope = scope
-	miniscope = scope[value[1..full_value.length]]
-	miniscope.each do |s|
-	  parse(s, template, index+1)
-	end
-	waiting = true
-	next
+        miniscope = scope[value[1..full_value.length]]
+        miniscope.each do |s|
+          parse(s, template, index+1)
+        end
+        waiting = true
+        next
       elsif value[0] == "/"
-	return
+        return
       end
       puts line.sub(full_value, scope[value])
     end
@@ -46,7 +46,7 @@ class Simpleview
       {#animals}
         <b>name:</b> {name}
         species: {species}
-	<br>
+        <br>
       {/animals}
     eos
   end
