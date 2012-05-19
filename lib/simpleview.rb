@@ -1,43 +1,38 @@
 class Simpleview
   attr_accessor :base_file_path
 
-  def parse(hash, template, offset=0)
+  def parse(hash, template)
     result = ""
-    base = hash
-    scope = base
-    previous_scope = base
-    waiting = false
-    template.split("\n").each_with_index do |line, index|
-      if waiting
-        if (line =~ /{#/).nil?
-          next
-        else
-          waiting = false
-          next
-        end
+    skip_line_count = 0
+    scope = hash
+    lines = template.class == Array ? template : template.split("\n")
+    lines.each_with_index do |line, index|
+      if skip_line_count > 0
+        skip_line_count -= 1
+        next
       end
-      next if index < offset
       start = line =~ /{/
       stop  = line[start..line.length] =~ /}/ if start != nil
-      if start == nil || stop == nil
+      if start.nil? || stop.nil?
         result += "#{line}\n"
         next
       end
       full_value = line[start..stop+start]
       value = full_value[1..full_value.length-2]
       if value[0] == "#"
-        previous_scope = scope
         miniscope = scope[value[1..full_value.length]]
+        snippet = lines[index+1..lines.length]
+        end_location = snippet.find_index { |l| l =~ /{\// }
+        end_location += index - 1
+        snippet = lines[index+1, end_location]
         miniscope.each do |s|
-          r = parse(s, template, index+1)
+          r = parse(s, snippet)
           result += r if r.class == String
         end
-        waiting = true
+        skip_line_count = snippet.length + 1
         next
-      elsif value[0] == "/"
-        return result
       end
-      result += line.sub(full_value, scope[value]) + "\n"
+      result += line.sub(full_value, scope[value]) + "\n" unless scope[value].nil?
     end
     result
   end
