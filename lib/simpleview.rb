@@ -38,31 +38,4 @@ class Simpleview
       puts line.sub(full_value, scope[value])
     end
   end
-
-  def sample_template
-    <<-eos
-      The persons name is: <b>{person}</b>.
-      <h2>he has the following animals:</h2>
-      {#animals}
-        <b>name:</b> {name}
-        species: {species}
-        <br>
-      {/animals}
-    eos
-  end
-
-  def sample_hash
-    {
-      "person" => "Matt",
-      "animals" => [
-        { "name" =>  "lady", "species" => "dog" },
-        { "name" => "skittles", "species" => "cat" }
-               ]
-    }
-
-  end
 end
-
-s = Simpleview.new
-s.parse(s.sample_hash, s.sample_template)
-
