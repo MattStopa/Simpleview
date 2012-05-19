@@ -31,4 +31,10 @@ describe "SimpleView" do
       it { should == "Hi, John!\nHow is your father:\nMr. Moocow\nHow is your daughter:\nPiglet\n" }
     end
   end
+
+  describe "#generate_snippet" do
+    let(:lines) { ["aaa", "bbb", "ccc", "ddd", "eee", "{/}fff", "ggg"]}
+    subject { Simpleview.new.generate_snippet(lines, 1) }
+    it { should == ["ccc", "ddd", "eee"] }
+  end
 end
