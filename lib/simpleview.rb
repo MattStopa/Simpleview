@@ -17,13 +17,12 @@ class Simpleview
         result += "#{line}\n"
         next
       end
-      full_value = line[start..stop+start]
-      value = full_value[1..full_value.length-2]
-      if value[0] == "#"
-        miniscope = scope[value[1..full_value.length]]
+      token = line[start..stop+start]
+      token_value = token[1..token.length-2]
+      if token_value[0] == "#"
+        miniscope = scope[token_value.gsub("#", '')]
         snippet = lines[index+1..lines.length]
-        end_location = snippet.find_index { |l| l =~ /{\// }
-        end_location += index - 1
+        end_location = snippet.find_index { |l| l =~ /{\// } + index - 1
         snippet = lines[index+1, end_location]
         miniscope.each do |s|
           r = parse(s, snippet)
@@ -32,7 +31,7 @@ class Simpleview
         skip_line_count = snippet.length + 1
         next
       end
-      result += line.sub(full_value, scope[value]) + "\n" unless scope[value].nil?
+      result += line.sub(token, scope[token_value]) + "\n" unless scope[token_value].nil?
     end
     result
   end
