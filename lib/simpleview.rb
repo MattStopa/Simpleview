@@ -20,9 +20,9 @@ class Simpleview
       token = line[start..stop+start]
       token_value = token[1..token.length-2]
       if token_value[0] == "#"
-        linescope = hash_scope[token_value.gsub("#", '')]
+        varscope = hash_scope[token_value.gsub("#", '')]
         snippet = generate_snippet(lines, index)
-        linescope.each do |s|
+        varscope.each do |s|
           r = parse(s, snippet)
           result += r if r.class == String
         end
@@ -36,7 +36,7 @@ class Simpleview
 
   def generate_snippet(lines, index)
     snippet = lines[index+1..lines.length]
-    end_location = snippet.find_index { |l| l =~ /{\// } + index - 1
+    end_location = snippet.find_index { |l| l =~ /{\// }
     lines[index+1, end_location]
   end
 end

@@ -30,6 +30,25 @@ describe "SimpleView" do
       subject { Simpleview.new.parse(hash, template) }
       it { should == "Hi, John!\nHow is your father:\nMr. Moocow\nHow is your daughter:\nPiglet\n" }
     end
+
+    context "multiple lines with multiple nested fields" do
+      let(:template) { "Hello, {name}.\n Your users are: \n{#users}\n{name}\n{/users}\n Your messages are \n{#messages}\n{message}\n{/messages}" }
+      let(:hash)  {
+                    {
+                      "name"=>"John",
+                      "users"=>[
+                         { "name" => "Mr. Moocow" },
+                         { "name" => "Piglet" }
+                      ],
+                      "messages"=>[
+                         { "message" => "Hi" },
+                         { "message" => "Goodbye" }
+                       ]
+                    }
+                  }
+      subject { Simpleview.new.parse(hash, template) }
+      it { should == "Hello, John.\n Your users are: \nMr. Moocow\nPiglet\n Your messages are \nHi\nGoodbye\n" }
+    end
   end
 
   describe "#generate_snippet" do
